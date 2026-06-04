@@ -11,6 +11,7 @@ on:
 
 jobs:
   check-package:
+    name: "Cek: ${{ github.event.inputs.nama_paket }}"
     runs-on: ubuntu-latest
     container:
       image: debian:trixie
