@@ -1,0 +1,28 @@
+name: Debian Package Checker
+
+on:
+  workflow_dispatch:
+    inputs:
+      nama_paket:
+        description: 'Masukkan nama paket yang ingin dicek (contoh: clang-21, llvm-21, gcc)'
+        required: true
+        default: 'clang'
+        type: string
+
+jobs:
+  check-package:
+    runs-on: ubuntu-latest
+    container:
+      image: debian:trixie
+
+    steps:
+    - name: Update Paket Repositori
+      run: |
+        apt-get update
+
+    - name: Cek Ketersediaan Paket di Debian Trixie
+      run: |
+        echo "=================================================="
+        echo " Memeriksa paket: ${{ github.event.inputs.nama_paket }}"
+        echo "=================================================="
+        apt-cache policy ${{ github.event.inputs.nama_paket }}
