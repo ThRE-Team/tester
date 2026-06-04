@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       nama_paket:
-        description: 'Masukkan nama paket yang ingin dicek (contoh: clang-21, llvm-21, gcc)'
+        description: 'Masukkan nama paket yang ingin dicek (pisahkan dengan spasi, contoh: clang-21 llvm-21 gcc)'
         required: true
         default: 'clang'
         type: string
@@ -22,7 +22,12 @@ jobs:
 
     - name: Cek Ketersediaan Paket di Debian Trixie
       run: |
-        echo "=================================================="
-        echo " Memeriksa paket: ${{ github.event.inputs.nama_paket }}"
-        echo "=================================================="
-        apt-cache policy ${{ github.event.inputs.nama_paket }}
+        for paket in ${{ github.event.inputs.nama_paket }}; do
+          echo "=================================================="
+          echo " Memeriksa paket: $paket"
+          echo "=================================================="
+          
+          apt-cache policy $paket || echo "❌ Paket '$paket' tidak ditemukan di repositori Debian Trixie."
+          
+          echo -e "\n"
+        done
